@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="ISO-8859-1">
+	<title>Online Banking System</title>
+	<script
+	src="http://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+</head>
+<body onload="starting();">
+	<center>
+	<h1>Welcome to World Bank </h1>
+	
+	<hr>
+	<table>
+		<tr>
+			<td> 
+			<input type="submit" value="Add Bank Details" onClick="addbank();">
+			</td>
+			<td>
+			<input type="submit" value="Get Bank Details" onClick="getbyid();">
+			</td>
+			<td>
+			<input type="submit" value="Get All Bank Details" onClick="allbanks();">
+			 </td>
+			<td>  
+			<input type="submit" value="Update Bank Details" onClick="update();">
+			</td>
+			<td>
+			<input type="submit" value="Delete Bank Details" onClick="delete1();">
+			</td>
+		</tr>
+	</table>
+	
+	</center>
+	<hr>
+	<table>
+		<tr>
+			<td>
+				<div id="welcome">
+					<br>
+					<center>
+					<H4> All Operations are available on Top side of column </h4>
+					<h4> Click any option to perform Operations</h4>
+					</center>
+				</div>
+				
+				
+				<div id="addbank1">
+					Enter Bank Details
+					<br>
+					<hr>
+					Enter Bank Code<br>
+					<input type="text" id="abankcode" ><br>
+					Enter Bank Name<br>
+					<input type="text" id="aname"><br>
+					Enter IFSC Code<br>
+					<input type="text" id="aifsc"><br>
+					Enter Branch Name<br>
+					<input type="text" id="abranch"><br>
+					Enter Address <br>
+					<input type="text" id="aaddress"><br>
+					<input type="submit" onclick="addbank2();">
+				</div>
+				
+				<div id="getbyid1">
+					Enter Bank Code<br>
+					<input type="text" id="gbankcode"><br>
+					<input type="submit" onclick="getbyid2();">
+				</div>
+				
+				
+				<div id="allbanks1">
+				</div>
+				
+				
+				<div id="update1">
+					Enter Bank Code<br>
+					<input type="text" id="ubankcode"><br>
+					Enter Bank Name<br>
+					<input type="text" id="uname"><br>
+					Enter IFSC Code<br>
+					<input type="text" id="uifsc"><br>
+					Enter Branch Name<br>
+					<input type="text" id="ubranch"><br>
+					Enter Address <br>
+					<input type="text" id="uaddress"><br>
+					<input type="submit" onclick="update2();">
+				</div>
+				
+				
+				<div id="delete1">
+					Enter Bank Code<br>
+					<input type="text" id="dbankcode"><br>
+					<input type="submit" onclick="delete2();">
+				</div>
+				
+			</td>
+			
+			<td>
+				<div id="outputscreen">
+					<h1>Output Screen</h1>
+					<div id="message" class="message">
+					Output Area
+					</div>
+				</div>
+			</td>
+		</tr>
+	</table>
+	<script type="text/javascript">
+	var previousid="welcome";
+		function starting()
+		{
+			document.getElementById("addbank1").style.display="none";
+		    document.getElementById("getbyid1").style.display="none";
+		    document.getElementById("allbanks1").style.display="none";
+		    document.getElementById("update1").style.display="none";
+		    document.getElementById("delete1").style.display="none";
+		    document.getElementById("outputscreen").style.display="none";
+		    document.getElementById("message").style.display="none";
+		    refreshall();
+		}
+		
+	
+		function addbank()
+		{
+			document.getElementById(previousid).style.display="none";
+		    document.getElementById("addbank1").style.display="block";
+		    document.getElementById("outputscreen").style.display="none";
+		    document.getElementById("message").style.display="none";
+		    previousid="addbank1";
+		    refreshall();
+		}
+		
+		
+		function getbyid()
+		{
+			document.getElementById(previousid).style.display="none";
+		    document.getElementById("getbyid1").style.display="block";
+		    document.getElementById("outputscreen").style.display="block";
+
+		    previousid="getbyid1";
+		    refreshall();
+		}
+		
+		function allbanks()
+		{
+			document.getElementById(previousid).style.display="none";
+		    document.getElementById("allbanks1").style.display="block";
+		    document.getElementById("outputscreen").style.display="block";
+		    document.getElementById("message").style.display="none";
+		    previousid="allbanks1";
+		    refreshall();
+		    allbanks2();
+		    
+		    
+		}
+		
+		function update()
+		{
+			document.getElementById(previousid).style.display="none";
+		    document.getElementById("update1").style.display="block";
+		    document.getElementById("outputscreen").style.display="none";
+		    document.getElementById("message").style.display="none";
+		    previousid="update1";
+		    refreshall();
+		}
+		
+		function delete1()
+		{
+			document.getElementById(previousid).style.display="none";
+		    document.getElementById("delete1").style.display="block";
+		    document.getElementById("outputscreen").style.display="block";
+		    document.getElementById("message").style.display="none";
+		    previousid="delete1";
+		    refreshall();
+		}
+		
+		function addbank2()
+		{
+			var jsonData = {};
+			var num = Number(abankcode.value);
+			//alert(num);
+			jsonData["bankcode"] = num;
+			jsonData["name"] = aname.value;
+			jsonData["ifsc"] = aifsc.value;
+			jsonData["branch"] = abranch.value;
+			jsonData["address"] = aaddress.value;
+			$.ajax({
+				type : "POST",
+				url : "http://localhost:8080/addbank",
+				beforeSend : function(request) {
+					request.setRequestHeader("Content-Type", "application/json");
+					request.setRequestHeader("Accept", "application/json");
+				},
+				data : JSON.stringify(jsonData),
+				success : function(msg) {
+					$("#message").html("Added Successfully");
+					$("#message").show();
+				}
+
+			});
+			alert("Check bank details entered or not in Get by id ");
+			
+		    //alert(abankcode.value+aname.value+aifsc.value+abranch.value+aaddress.value);
+		    
+		}
+		
+		
+		function getbyid2()
+		{
+			var id5 = Number(gbankcode.value);
+			//alert(id5);
+			$.ajax({
+				type : "GET",
+				url : "http://localhost:8080/getid/"+id5,
+				beforeSend : function(request){
+					request.setRequestHeader("Accept","application/json");
+				},
+				success : function(msg) {
+					var bank = msg;
+					if(bank.bankcode == undefined) {
+						$("#message").html("No Records");
+						$("#message").show();
+					}
+					else
+						{
+						$("#message").html(
+								bank.bankcode+":"+bank.name+":"+bank.ifsc+":"+bank.branch+":"+bank.address
+								);
+						$("#message").show();
+						
+						}
+				}
+			});
+			//alert(gbankcode.value);
+		}
+		
+		function allbanks2()
+		{
+			$.ajax({
+				type : "GET",
+				url : "http://localhost:8080/getBank",
+				beforeSend : function(request) {
+					request.setRequestHeader("Content-Type", "application/json");
+					request.setRequestHeader("Accept", "application/json");
+				},
+				success: function(msg)
+				{
+					var content = "";
+					for ( var i = 0; i < msg.length; i++) {
+			             content +='<br> BankCode :'+msg[i].bankcode+ ' Bank name : ' + msg[i].name+' IFSC :'+msg[i].ifsc+' Branch :'+msg[i].branch +' Address: '+msg[i].address+ '<br>';
+			          };
+			          $("#message").html(content);
+			          $("#message").show();
+				}
+			});	
+			//bank.bankcode+":"+bank.name+":"+bank.ifsc+":"+bank.branch+":"+bank.address
+			//alert("calling here");
+		}
+		
+		function update2()
+		{
+			var jsonData = {};
+			var num1 = Number(ubankcode.value);
+			//alert(num);
+			//alert(ubankcode.value+uname.value+uifsc.value+ubranch.value+uaddress.value);
+			jsonData["bankcode"] = num1;
+			jsonData["name"] = uname.value;
+			jsonData["ifsc"] = uifsc.value;
+			jsonData["branch"] = ubranch.value;
+			jsonData["address"] = uaddress.value;
+			$.ajax({
+				type : "PUT",
+				url : "http://localhost:8080/updateBank",
+				beforeSend : function(request) {
+					request.setRequestHeader("Content-Type", "application/json");
+					request.setRequestHeader("Accept", "application/json");
+				},
+				data : JSON.stringify(jsonData),
+				success : function(msg) {
+					$("#message").html("Added Successfully");
+					$("#message").show();
+				}
+			});
+			alert("Check bank deatils entered is updated or not in Get by id ");
+			
+			//alert(ubankcode.value+uname.value+uifsc.value+ubranch.value+uaddress.value);
+		}
+		
+		function delete2()
+		{
+			var id5 = Number(dbankcode.value);
+			//alert(id5);
+			$.ajax({
+				type : "DELETE",
+				url : "http://localhost:8080/deletes/"+id5,
+				beforeSend : function(request){
+					request.setRequestHeader("Accept","application/json");
+				},
+				success : function(msg) {
+					
+				}
+			});
+			//alert(dbankcode.value);
+			
+			//alert(dbankcode.value);
+		}
+		
+		function refreshall()
+		{
+			
+			abankcode.value="";
+		    aname.value="";
+		    aifsc.value="";
+		    abranch.value="";
+		    aaddress.value="";
+		    gbankcode.value="";
+		    ubankcode.value="";
+		    uname.value="";
+		    uifsc.value="";
+		    ubranch.value="";
+		    uaddress.value="";
+		    dbankcode.value="";
+		    
+		}
+	
+	</script>
+
+</body>
+</html>
